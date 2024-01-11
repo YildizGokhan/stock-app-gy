@@ -1,56 +1,41 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import { Grid, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import useStockCalls from "../service/useStockCalls";
-import { useEffect } from "react";
-import { useSelector } from 'react-redux';
+import { Button, Grid, Typography } from '@mui/material'
+import React, { useEffect } from 'react'
+import useStockCalls from '../service/useStockCalls'
+import { useSelector } from 'react-redux'
+import FirmCard from '../components/FirmCard'
+import NewFirmModal from '../components/NewFirmModal'
 
-export default function MediaCard() {
-  const { firms } = useSelector((state) => state.stock);
-  const { getFirms } = useStockCalls();
-  
+const Firms = () => {
+  const { getStocks } = useStockCalls()
+  const { firms } = useSelector(state => state.stock)
+
   useEffect(() => {
-    getFirms();
-  }, []);
+    getStocks("firms")
+    getStocks("sales")
+  }, [])
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
-    <Grid container spacing={2} justifyContent="center">
-      {firms.map((item) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-          <Stack sx={{ flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', spacing: 2 }}>
-            <Card sx={{ maxWidth: 500, height: 450 }}>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div" sx={{ height: 50 }}>
-                  {item.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ height: 100 }}>
-                  {item.address}
-                </Typography>
-              </CardContent>
-              <CardMedia
-                component="img"
-                image={item.image}
-                title={item.name}
-                sx={{ objectFit: 'contain', minHeight: 140, height: 140, width: '100%' }}
-              />
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  {item.phone}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
-          </Stack>
-        </Grid>
-      ))}
-    </Grid>
-  );
+    <div>
+      <Typography variant='h4' color={"error"} mb={3}>
+        Firms
+      </Typography>
+      <Button variant="contained" onClick={handleOpen}>
+        New Firm
+      </Button>
+      <Grid container gap={2} mt={3} justifyContent={"center"}>
+        {firms?.map((firm) => (
+          <Grid item key={firm._id}>
+            <FirmCard firm={firm} />
+          </Grid>
+        ))}
+      </Grid>
+      <NewFirmModal open={open} handleOpen={handleOpen} handleClose={handleClose} />
+    </div>
+  )
 }
+
+export default Firms

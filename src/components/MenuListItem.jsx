@@ -49,7 +49,7 @@ const iconStyle = {
     color: "white",
     "& .MuiSvgIcon-root": { color: "white" },
     "&:hover": { color: "red" },
-    "&:hover .MuiSvgIcon-root": { color: "red" }
+    "&:hover .MuiSvgIcon-root": { color: "red", backgroundColor: "#222a2ff5" }
 }
 
 const MenuListItems = () => {
