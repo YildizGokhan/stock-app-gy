@@ -8,7 +8,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import EditIcon from "@mui/icons-material/Edit"
 import { btnStyle } from '../styles/globalStyles';
 import useStockCalls from '../service/useStockCalls';
-import EditNewModal from './EditNewModal';
+import NewFirmModal from './NewFirmModal';
 
 export default function FirmCard({ firm }) {
   const [open, setOpen] = React.useState(false);
@@ -44,7 +44,7 @@ export default function FirmCard({ firm }) {
         <EditIcon sx={btnStyle} onClick={handleOpen} />
 
       </CardActions>
-      <EditNewModal handleOpen={handleOpen} handleClose={handleClose} open={open} firm={firm} />
+      <NewFirmModal handleOpen={handleOpen} handleClose={handleClose} open={open} firm={firm} />
     </Card>
   );
 }

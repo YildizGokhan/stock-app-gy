@@ -19,8 +19,9 @@ const style = {
   p: 4,
 };
 
-export default function NewFirmModal({ handleClose, open }) {
-  const { addStock } = useStockCalls()
+export default function NewFirmModal({ handleClose, open, firm }) {
+  const { addStock, updateStock } = useStockCalls()
+
   const [data, setData] = React.useState({
     name: "",
     phone: "",
@@ -28,21 +29,44 @@ export default function NewFirmModal({ handleClose, open }) {
     image: "",
   })
 
+  const [data1, setData1] = React.useState({
+    name: firm ? firm.name : "",
+    phone: firm ? firm.phone : "",
+    address: firm ? firm.address : "",
+    image: firm ? firm.image : "",
+  });
+
+  React.useEffect(() => {
+
+    setData1({
+      name: firm ? firm.name : "",
+      phone: firm ? firm.phone : "",
+      address: firm ? firm.address : "",
+      image: firm ? firm.image : "",
+    });
+  }, [firm, open]);
+
+
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
+    setData1({ ...data1, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addStock("firms", data)
+    if (firm) {
+      updateStock("firms", firm._id, data1);
+    } else {
+      addStock("firms", data);
+    }
     handleClose();
     setData({
       name: "",
       phone: "",
       address: "",
       image: "",
-    })
-  }
+    });
+  };
 
   return (
     <div>
@@ -52,7 +76,7 @@ export default function NewFirmModal({ handleClose, open }) {
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        slots={{ backdrop: Backdrop }}
+        slot={{ backdrop: Backdrop }}
         slotProps={{
           backdrop: {
             timeout: 500,
@@ -60,7 +84,7 @@ export default function NewFirmModal({ handleClose, open }) {
         }}
       >
         <Fade in={open}>
-          <Box component={"form"} sx={style} onSubmit={handleSubmit}>
+          <Box component={"form"} sx={style} onSubmit={handleSubmit} slot={{ backdrop: Backdrop }}>
             <FormControl sx={{ width: "100%" }}>
               <TextField
                 label="Firma Adı"
@@ -68,7 +92,7 @@ export default function NewFirmModal({ handleClose, open }) {
                 id="name"
                 type="text"
                 variant="outlined"
-                value={data.name}
+                value={open ? (firm ? data1.name : data.name) : ""}
                 sx={{ marginTop: "1rem" }}
                 onChange={handleChange}
                 required
@@ -79,7 +103,7 @@ export default function NewFirmModal({ handleClose, open }) {
                 id="phone"
                 type="text"
                 variant="outlined"
-                value={data.phone}
+                value={open ? (firm ? data1.phone : data.phone) : ""}
                 sx={{ marginTop: "1rem" }}
                 onChange={handleChange}
                 required
@@ -90,7 +114,7 @@ export default function NewFirmModal({ handleClose, open }) {
                 id="address"
                 type="text"
                 variant="outlined"
-                value={data.address}
+                value={open ? (firm ? data1.address : data.address) : ""}
                 sx={{ marginTop: "1rem" }}
                 onChange={handleChange}
                 required
@@ -101,13 +125,13 @@ export default function NewFirmModal({ handleClose, open }) {
                 id="image"
                 type="text"
                 variant="outlined"
-                value={data.image}
+                value={open ? (firm ? data1.image : data.image) : ""}
                 sx={{ marginTop: "1rem" }}
                 onChange={handleChange}
                 required
               />
               <Button type="submit" variant="contained" size="large" sx={{ marginTop: "1rem" }}>
-                Gönder
+                Gönder.
               </Button>
             </FormControl>
           </Box>
