@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import { FormControl, TextField } from "@mui/material";
 import useStockCalls from "../service/useStockCalls";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -22,30 +23,19 @@ const style = {
 export default function NewFirmModal({ handleClose, open, firm }) {
   const { addStock, updateStock } = useStockCalls()
 
-  const [data, setData] = React.useState({
+  const [data, setData] = useState({
     name: "",
     phone: "",
     address: "",
     image: "",
   })
 
-  const [data1, setData1] = React.useState({
+  const [data1, setData1] = useState({
     name: firm ? firm.name : "",
     phone: firm ? firm.phone : "",
     address: firm ? firm.address : "",
     image: firm ? firm.image : "",
   });
-
-  React.useEffect(() => {
-
-    setData1({
-      name: firm ? firm.name : "",
-      phone: firm ? firm.phone : "",
-      address: firm ? firm.address : "",
-      image: firm ? firm.image : "",
-    });
-  }, [firm, open]);
-
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -131,7 +121,7 @@ export default function NewFirmModal({ handleClose, open, firm }) {
                 required
               />
               <Button type="submit" variant="contained" size="large" sx={{ marginTop: "1rem" }}>
-                Gönder.
+                Gönder
               </Button>
             </FormControl>
           </Box>

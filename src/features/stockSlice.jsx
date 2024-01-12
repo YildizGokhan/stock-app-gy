@@ -19,7 +19,6 @@ const stockSlice = createSlice({
       state.loading = false
       state[payload.url] = payload.apiData
     },
-    
   },
 })
 
