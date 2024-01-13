@@ -1,18 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../features/authSlice";
-import stockReducer from "../features/stockSlice";
+import { configureStore } from "@reduxjs/toolkit"
+import authReducer from "../features/authSlice"
+import stockReducer from "../features/stockSlice"
 import {
-  persistStore, persistReducer, FLUSH,
+  persistStore,
+  persistReducer,
+  FLUSH,
   REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage/session'
+} from "redux-persist"
+// import storage from "redux-persist/lib/storage" //? local storage
+import storage from "redux-persist/lib/storage/session" //? session storage
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
 }
 
@@ -30,9 +33,7 @@ const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-});
-
-
+})
 export const persistor = persistStore(store)
 
-export default store;
+export default store

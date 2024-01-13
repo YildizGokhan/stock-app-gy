@@ -1,110 +1,71 @@
-import * as React from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import { FormControl, TextField } from "@mui/material";
-import useStockCalls from "../service/useStockCalls";
-import { useState } from "react";
+// import { useState } from "react"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+import Modal from "@mui/material/Modal"
+import { modalStyle } from "../styles/globalStyles"
+import useStockCalls from "../service/useStockCalls"
 
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-};
-
-export default function BrandModal({ handleClose, open, brand,handleOpen }) {
-    const { addStock, updateStock } = useStockCalls()
-
-    const [data, setData] = useState({
-        name: "",
-        phone: "",
-        address: "",
-        image: "",
-    })
-
-    const [data1, setData1] = useState({
-        name: brand ? brand.name : "",
-        phone: brand ? brand.phone : "",
-        address: brand ? brand.address : "",
-        image: brand ? brand.image : "",
-    });
+export default function FirmModal({ open, handleClose, info, setInfo }) {
+    const { postStock, putStock } = useStockCalls()
 
     const handleChange = (e) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-        setData1({ ...data1, [e.target.name]: e.target.value })
+        setInfo({ ...info, [e.target.name]: e.target.value })
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (brand) {
-            updateStock("brands", brand._id, data1);
-        } else {
-            addStock("brands", data);
-        }
-        handleClose();
-        setData({
-            name: "",
-            phone: "",
-            address: "",
-            image: "",
-        });
-    };
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (info._id) {
+            putStock("brands", info)
+        } else {
+            postStock("brands", info)
+        }
+
+        handleClose()
+    }
+
+    console.log(info)
     return (
         <div>
             <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
                 open={open}
                 onClose={handleClose}
-                closeAfterTransition
-                slot={{ backdrop: Backdrop }}
-                slotProps={{
-                    backdrop: {
-                        timeout: 500,
-                    },
-                }}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
             >
-                <Fade in={open}>
-                    <Box component={"form"} sx={style} onSubmit={handleSubmit} slot={{ backdrop: Backdrop }}>
-                        <FormControl sx={{ width: "100%" }}>
-                            <TextField
-                                label="Firma Adı"
-                                name="name"
-                                id="name"
-                                type="text"
-                                variant="outlined"
-                                value={open ? (brand ? data1.name : data.name) : ""}
-                                sx={{ marginTop: "1rem" }}
-                                onChange={handleChange}
-                                required
-                            />                         
-                            <TextField
-                                label="Resim"
-                                name="image"
-                                id="image"
-                                type="text"
-                                variant="outlined"
-                                value={open ? (brand ? data1.image : data.image) : ""}
-                                sx={{ marginTop: "1rem" }}
-                                onChange={handleChange}
-                                required
-                            />
-                            <Button type="submit" variant="contained" size="large" sx={{ marginTop: "1rem" }}>
-                                Gönder
-                            </Button>
-                        </FormControl>
+                <Box sx={modalStyle}>
+                    <Box
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                        component="form"
+                        onSubmit={handleSubmit}
+                    >
+                        <TextField
+                            label="Brand Name"
+                            name="name"
+                            id="name"
+                            type="text"
+                            variant="outlined"
+                            value={info.name}
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextField
+                            label="Image"
+                            name="image"
+                            id="image"
+                            type="url"
+                            variant="outlined"
+                            value={info.image}
+                            onChange={handleChange}
+                            required
+                        />
+                        <Button type="submit" variant="contained" size="large">
+                            {info._id ? "Update Brand" : "Add Brand"}
+                        </Button>
                     </Box>
-                </Fade>
+                </Box>
             </Modal>
         </div>
-    );
+    )
 }

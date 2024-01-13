@@ -9,23 +9,28 @@ import Box from "@mui/material/Box"
 import TextField from "@mui/material/TextField"
 import { Button } from "@mui/material"
 import { Formik, Form } from "formik"
-import { object, string } from 'yup';
+import { object, string } from "yup"
 import useAuthCalls from "../service/useAuthCalls"
 
 const Login = () => {
   const { login } = useAuthCalls()
-  
-  const loginSchema = object({
-    email: string().email().required("Email girişi zorunludur."),
-    password: string().min(8, "Şifre en az 8 karakter olmalıdır")
-      .max(16, "Şifre en fazla 16 karakter olmalıdır.")
-      .required("Şifre girişi zorunludur")
-      .matches(/\d+/, "Şifre en az bir sayı içermelidir.")
-      .matches(/[a-z]/, "Şifre en az bir küçük karakter içermelidir.")
-      .matches(/[A-Z]/, "Şifre en az bir büyük karakter içermelidir.")
-      .matches(/[@$!%*?&]/, "Şifre en az bir özel karakter (@$!%*?&)  içermelidir.")
 
-  });
+  const loginSchema = object({
+    email: string()
+      .email("Lütfen geçerli bir email giriniz")
+      .required("Email girişi zorunludur"),
+    password: string()
+      .required("Şifre zorunludur.")
+      .min(8, "Şifre en az 8 karakter içermelidir")
+      .max(16, "Şifre en falza 16 karakter içermelidir")
+      .matches(/\d+/, "Şifre en az bir rakam içermelidir")
+      .matches(/[a-z]/, "Şifre en az bir küçük harf içermelidir")
+      .matches(/[A-Z]/, "Şifre en az bir büyük harf içermelidir")
+      .matches(
+        /[@$!%*?&]+/,
+        "Şifre en az bir özel karakter (@$!%*?&) içermelidir"
+      ),
+  })
   return (
     <Container maxWidth="lg">
       <Grid
@@ -62,23 +67,23 @@ const Login = () => {
           >
             Login
           </Typography>
-          {/* inputları formik içine aldık */}
+
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={loginSchema}
             onSubmit={(values, actions) => {
-              // login yani post isteği atmamız lazım, navigate yapılabilir.post yapılabilir.verilar kaydedilebilir.form silineblir.
+              //TODO login(post) istegi
               login(values)
               actions.resetForm()
-              actions.setSubmitting(false)
-
+              actions.setSubmitting(false) //? isSubmitting
+              //? veriler global state'e aktırlabilir
+              //? navigasyon yapılabilir
+              //? tost yapılabilr
             }}
           >
             {({ handleChange, values, touched, errors, handleBlur }) => (
               <Form>
-                <Box
-                  sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                >
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <TextField
                     label="Email"
                     name="email"
@@ -87,9 +92,9 @@ const Login = () => {
                     variant="outlined"
                     value={values.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     error={touched.email && Boolean(errors.email)}
                     helperText={errors.email}
-                    onBlur={handleBlur}
                   />
                   <TextField
                     label="password"
@@ -99,19 +104,18 @@ const Login = () => {
                     variant="outlined"
                     value={values.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={errors.password}
-                    onBlur={handleBlur}
                   />
-
                   <Button variant="contained" type="submit">
                     Submit
                   </Button>
                 </Box>
               </Form>
             )}
-
           </Formik>
+
           <Box sx={{ textAlign: "center", mt: 2 }}>
             <Link to="/register">Do you have not an account?</Link>
           </Box>
@@ -123,7 +127,7 @@ const Login = () => {
           </Container>
         </Grid>
       </Grid>
-    </Container >
+    </Container>
   )
 }
 
