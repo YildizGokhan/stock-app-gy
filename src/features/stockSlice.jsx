@@ -18,23 +18,10 @@ const stockSlice = createSlice({
     fetchStart: (state) => {
       state.loading = true
     },
-    // getFirmsSuccess: (state, { payload }) => {
-    //   state.firms = payload
-    //   state.loading = false
-    // },
-    // getSalesSuccess: (state, { payload }) => {
-    //   state.sales = payload
-    //   state.loading = false
-    // },
-    // getStockSuccess: (state, { payload: { url, apiData } }) => {
-    //   state[url] = apiData
-    //   state.loading = false
-    // },
     getStockSuccess: (state, action) => {
       state[action.payload.url] = action.payload.apiData
       state.loading = false
     },
-
     fetchFail: (state) => {
       state.loading = false
       state.error = true

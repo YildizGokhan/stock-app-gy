@@ -6,11 +6,11 @@ import { useSelector } from "react-redux"
 import { Grid } from "@mui/material"
 import FirmCard from "../components/FirmCard"
 import FirmModal from "../components/FirmModal"
+import Loading from "../assets/loading.gif"
 
 const Firms = () => {
-  // const { getFirms, getSales } = useStockCalls()
   const { getStocks } = useStockCalls()
-  const { firms } = useSelector((state) => state.stock)
+  const { firms, loading } = useSelector((state) => state.stock)
 
   const [info, setInfo] = useState({
     name: "",
@@ -27,11 +27,18 @@ const Firms = () => {
   }
 
   useEffect(() => {
-    // getFirms()
     getStocks("firms")
   }, [])
 
   console.log(firms)
+
+  if (loading) {
+    return (
+      <div>
+        <img src={Loading} alt="Loading" />
+      </div>
+    );
+  }
 
   return (
     <div>

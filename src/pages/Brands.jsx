@@ -6,10 +6,11 @@ import { useSelector } from "react-redux"
 import { Grid } from "@mui/material"
 import BrandModal from "../components/BrandModal"
 import BrandCard from "../components/BrandCard"
+import Loading from "../assets/loading.gif"
 
 const Firms = () => {
   const { getStocks } = useStockCalls()
-  const { brands } = useSelector((state) => state.stock)
+  const { brands, loading } = useSelector((state) => state.stock)
 
   const [info, setInfo] = useState({
     name: "",
@@ -29,6 +30,13 @@ const Firms = () => {
     getStocks("brands")
   }, [])
 
+  if(loading) {
+    return (
+      <div>
+        <img src={Loading} alt="Loading" />
+      </div>
+    )
+  }
 
   return (
     <div>

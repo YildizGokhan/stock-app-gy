@@ -5,11 +5,12 @@ import useStockCalls from "../service/useStockCalls"
 import { useSelector } from "react-redux"
 import ProductModal from "../components/ProductModal"
 import ProductTable from "../components/ProductTable"
+import Loading from "../assets/loading.gif"
 
 const Products = () => {
   // const { getFirms, getSales } = useStockCalls()
   const { getStocks } = useStockCalls()
-  const { products } = useSelector((state) => state.stock)
+  const { products, loading } = useSelector((state) => state.stock)
 
   const [info, setInfo] = useState({
     name: "",
@@ -30,6 +31,14 @@ const Products = () => {
     getStocks("categories")
     getStocks("brands")
   }, [])
+
+if(loading) {
+  return (
+    <div>
+      <img src={Loading} alt="loading" />
+    </div>
+  )
+}
 
   return (
     <div>
