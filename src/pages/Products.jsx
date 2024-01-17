@@ -5,25 +5,26 @@ import useStockCalls from "../service/useStockCalls"
 import { useSelector } from "react-redux"
 import ProductModal from "../components/ProductModal"
 import ProductTable from "../components/ProductTable"
-import Loading from "../assets/loading.gif"
+import TableSkeleton, { NoDataMsg, ErrorMsg } from "../components/DataFetchMsg"
 
 const Products = () => {
-  // const { getFirms, getSales } = useStockCalls()
   const { getStocks } = useStockCalls()
-  const { products, loading } = useSelector((state) => state.stock)
+  const { products, error, loading } = useSelector((state) => state.stock)
 
-  const [info, setInfo] = useState({
+  const initialState = {
+    categoryId: "",
+    brandId: "",
     name: "",
-    phone: "",
-    address: "",
-    image: "",
-  })
+
+  }
+
+  const [info, setInfo] = useState(initialState)
 
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
     setOpen(false)
-    setInfo({ name: "", phone: "", address: "", image: "" })
+    setInfo(initialState)
   }
 
   useEffect(() => {
@@ -31,14 +32,6 @@ const Products = () => {
     getStocks("categories")
     getStocks("brands")
   }, [])
-
-if(loading) {
-  return (
-    <div>
-      <img src={Loading} alt="loading" />
-    </div>
-  )
-}
 
   return (
     <div>
@@ -55,8 +48,12 @@ if(loading) {
         info={info}
         setInfo={setInfo}
       />
+      {error && <ErrorMsg />}
+      {loading && <TableSkeleton />}
 
-      <ProductTable />
+      {!error && !loading && !products.length && <NoDataMsg />}
+      {!loading && !error && products.length > 0 &&  <ProductTable />}
+
     </div>
   )
 }

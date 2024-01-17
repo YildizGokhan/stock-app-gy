@@ -39,10 +39,6 @@ const useAuthCalls = () => {
   const register = async (userInfo) => {
     dispatch(fetchStart())
     try {
-      // const { data } = await axios.post(
-      //   `${process.env.REACT_APP_BASE_URL}/users/`,
-      //   userInfo
-      // )
       const { data } = await axiosPublic.post("/users/", userInfo)
       dispatch(registerSuccess(data))
       navigate("/stock")
@@ -53,20 +49,15 @@ const useAuthCalls = () => {
 
   const logout = async () => {
     dispatch(fetchStart())
-    try {
-      // await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/logout`, {
-      //   headers: { Authorization: `Token ${token}` },
-      // })
+    try { 
       await axiosWithToken("/auth/logout/")
       toastSuccessNotify("Çıkış işlemi başarili.")
       dispatch(logoutSuccess())
-      // navigate("/")
     } catch (error) {
       dispatch(fetchFail())
       toastErrorNotify("Çıkış işlemi başarisiz oldu.")
     }
   }
-
   return { login, register, logout }
 }
 

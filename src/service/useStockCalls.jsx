@@ -7,14 +7,12 @@ const useStockCalls = () => {
   const { axiosWithToken } = useAxios()
   const dispatch = useDispatch()
 
-
   const getStocks = async (url = "firms") => {
     dispatch(fetchStart())
     try {
       const { data } = await axiosWithToken(`/${url}/`)
       const apiData = data.data
       dispatch(getStockSuccess({ apiData, url }))
-
     } catch (error) {
       dispatch(fetchFail())
       toastErrorNotify(`${url} bilgileri çekilemedi.`)
@@ -37,11 +35,11 @@ const useStockCalls = () => {
     dispatch(fetchStart())
     try {
       await axiosWithToken.post(`/${url}/`, info)
-      toastSuccessNotify(`${url} kaydı eklenmiştir.`)
+      toastSuccessNotify(`${url} kayıdı eklenmiştir.`)
       getStocks(url)
     } catch (error) {
       dispatch(fetchFail())
-      toastErrorNotify(`${url} kaydı eklenemiştir.`)
+      toastErrorNotify(`${url} kaydi eklenemiştir.`)
     }
   }
 
