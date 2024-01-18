@@ -1,4 +1,9 @@
-import { fetchStart, fetchFail, getStockSuccess } from "../features/stockSlice"
+import {
+  fetchStart,
+  fetchFail,
+  getStockSuccess,
+  getProPurBranFirmSuccess,
+} from "../features/stockSlice"
 import useAxios from "./useAxios"
 import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify"
 import { useDispatch } from "react-redux"
@@ -6,6 +11,28 @@ import { useDispatch } from "react-redux"
 const useStockCalls = () => {
   const { axiosWithToken } = useAxios()
   const dispatch = useDispatch()
+
+  //   const getFirms = async () => {
+  //     dispatch(fetchStart())
+  //     try {
+  //       const { data } = await axiosWithToken("/firms/")
+  //       dispatch(getFirmsSuccess(data.data))
+  //     } catch (error) {
+  //       dispatch(fetchFail())
+  //       toastErrorNotify("Firm bilgileri çekilemedi.")
+  //     }
+  //   }
+
+  //   const getSales = async () => {
+  //     dispatch(fetchStart())
+  //     try {
+  //       const { data } = await axiosWithToken("/sales/")
+  //       dispatch(getSalesSuccess(data.data))
+  //     } catch (error) {
+  //       dispatch(fetchFail())
+  //       toastErrorNotify("Sales bilgileri çekilemedi.")
+  //     }
+  //   }
 
   const getStocks = async (url = "firms") => {
     dispatch(fetchStart())
@@ -16,6 +43,28 @@ const useStockCalls = () => {
     } catch (error) {
       dispatch(fetchFail())
       toastErrorNotify(`${url} bilgileri çekilemedi.`)
+    }
+  }
+
+  const getProPurBranFirm = async () => {
+    dispatch(fetchStart())
+    try {
+      const [products, purchases, brands, firms] = await Promise.all([
+        axiosWithToken("/products/"),
+        axiosWithToken("/purchases/"),
+        axiosWithToken("/brands/"),
+        axiosWithToken("/firms/"),
+      ])
+      dispatch(
+        getProPurBranFirmSuccess([
+          products?.data?.data,
+          purchases?.data?.data,
+          brands?.data?.data,
+          firms?.data?.data,
+        ])
+      )
+    } catch (error) {
+      dispatch(fetchFail())
     }
   }
 
@@ -55,7 +104,7 @@ const useStockCalls = () => {
     }
   }
 
-  return { getStocks, deleteStock, postStock, putStock }
+  return { getStocks, deleteStock, postStock, putStock, getProPurBranFirm }
 }
 
 export default useStockCalls

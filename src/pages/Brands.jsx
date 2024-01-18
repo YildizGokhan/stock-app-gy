@@ -1,15 +1,17 @@
-import { Typography, Box, Grid, Alert, Button } from "@mui/material"
+import { Typography, Box, Grid, Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import BrandCard from "../components/BrandCard"
 import BrandModal from "../components/BrandModal"
-import useStockCall from "../service/useStockCalls"
+import useStockCalls from "../service/useStockCalls"
+import { CardSkeleton, ErrorMsg, NoDataMsg } from "../components/DataFetchMsg"
 
 const Brands = () => {
-  const { getStocks } = useStockCall()
-  const { brands, loading } = useSelector((state) => state.stock)
-  
+  const { getStocks } = useStockCalls()
+  const { brands, loading, error } = useSelector((state) => state.stock)
+
   const [info, setInfo] = useState({ name: "", image: "" })
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
@@ -19,7 +21,7 @@ const Brands = () => {
 
   useEffect(() => {
     getStocks("brands")
-  }, []) 
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box>
@@ -38,14 +40,18 @@ const Brands = () => {
         setInfo={setInfo}
       />
 
-      {!loading && !brands?.length && (
-        <Alert severity="warning" sx={{ mt: 4, width: "50%" }}>
-          There is no brand to show
-        </Alert>
+      {error && <ErrorMsg />}
+
+      {loading && (
+        <CardSkeleton>
+          <BrandCard />
+        </CardSkeleton>
       )}
 
-      {brands?.length > 0 && (
-        <Grid container gap={2} mt={3} justifyContent={"center"}>
+      {!loading && !brands?.length && <NoDataMsg />}
+
+      {!loading && brands?.length > 0 && (
+        <Grid container justifyContent={"center"} gap={2} mt={4}>
           {brands?.map((brand) => (
             <Grid item key={brand._id}>
               <BrandCard

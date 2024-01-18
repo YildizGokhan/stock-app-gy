@@ -75,7 +75,10 @@ const Login = () => {
               //TODO login(post) istegi
               login(values)
               actions.resetForm()
-              actions.setSubmitting(false) 
+              actions.setSubmitting(false) //? isSubmitting
+              //? veriler global state'e aktırlabilir
+              //? navigasyon yapılabilir
+              //? tost yapılabilr
             }}
           >
             {({ handleChange, values, touched, errors, handleBlur }) => (

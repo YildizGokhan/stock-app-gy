@@ -15,6 +15,7 @@ import MenuListItems from "../components/MenuListItems"
 import { Outlet } from "react-router-dom"
 
 const drawerWidth = 200
+
 function Dashboard(props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
@@ -33,6 +34,7 @@ function Dashboard(props) {
     </div>
   )
 
+  // Remove this const when copying and pasting into your project.
   const container =
     window !== undefined ? () => window().document.body : undefined
 
@@ -72,14 +74,14 @@ function Dashboard(props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-    
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, 
+            keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
             display: { xs: "block", sm: "none" },
