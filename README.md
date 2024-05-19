@@ -20,4 +20,13 @@ npm install veya yarn
 
 ## Uygulamanın Canlı Ornegi:
 
-https://stock-new.netlify.app/
+[https://stock-app-gy.vercel.app/stock](https://stock-app-gy.vercel.app/stock)
+
+
+Admin Girişi:
+
+Mail:
+admin@site.com
+
+Password:
+aA?123456
