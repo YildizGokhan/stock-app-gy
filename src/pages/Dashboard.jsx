@@ -13,14 +13,41 @@ import { useSelector } from "react-redux"
 import useAuthCalls from "../service/useAuthCalls"
 import MenuListItems from "../components/MenuListItems"
 import { Outlet } from "react-router-dom"
+import axios from "axios"
+import { useState, useEffect } from "react"
+import loadingGif from "../assets/loading.gif"
 
 const drawerWidth = 200
 
 function Dashboard(props) {
   const { window } = props
-  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const { user } = useSelector((state) => state.auth)
   const { logout } = useAuthCalls()
+
+  const [isLoading, setIsLoading] = useState(true)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(process.env.REACT_APP_BASE_URL)
+
+        setIsLoading(!Boolean(response.data))
+        console.log(!Boolean(response.data))
+     
+      } catch (error) {
+        console.error("Failed to fetch data", error)
+        setIsLoading(true)    
+
+      }
+    }
+
+    fetchData()
+  }, [])
+
+
+  
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -34,12 +61,27 @@ function Dashboard(props) {
     </div>
   )
 
-  // Remove this const when copying and pasting into your project.
   const container =
     window !== undefined ? () => window().document.body : undefined
 
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <img src={loadingGif} alt="Loading..." />
+      </Box>
+    )
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
+    
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -74,14 +116,13 @@ function Dashboard(props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },

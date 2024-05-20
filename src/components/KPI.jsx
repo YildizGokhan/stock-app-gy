@@ -38,7 +38,7 @@ const KPI = () => {
     },
   ]
 
-  console.log(purchases)
+  // console.log(purchases)
   return (
     <Stack
       justifyContent="center"
